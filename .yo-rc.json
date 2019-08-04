@@ -1,0 +1,34 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.umsa.storage"
+    },
+    "jhipsterVersion": "6.2.0",
+    "applicationType": "monolith",
+    "baseName": "storage",
+    "packageName": "com.umsa.storage",
+    "packageFolder": "com/umsa/storage",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "gradle",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "NmE2ZjA3YTBiYTExNTAxYWE4ZjE5ZDkwNDYxOThlNDg5OTlkZDhjNGU2ZDZhMmY5NDk4MjZmZWY5ZTgxNTQzZmY2YjkxNzM2NTVmMGI5YTE5ZTc5ZDFiMTE3YjlmMDcyYzg5ZWM2ZjM3ZjQ1YThjZDk3MDg3NDNhMTRjMjRhNzU=",
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false,
+    "clientPackageManager": "npm",
+    "blueprints": [],
+    "skipClient": true
+  }
+}
