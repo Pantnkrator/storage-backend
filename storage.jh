@@ -1,0 +1,27 @@
+entity FileType{
+    name String,
+    createdBy String,
+    createdDate Instant,
+    lastModifiedBy String,
+    lastModifiedDate Instant
+}
+entity File {
+    name String,
+    url String,
+    typeId Integer,
+    createdBy String,
+    createdDate Instant,
+    lastModifiedBy String,
+    lastModifiedDate Instant
+}
+
+/**
+ * Many to one relationship.
+ */
+relationship ManyToOne {
+    File{fileType} to FileType
+}
+
+dto all with mapstruct
+service all with serviceClass
+paginate all with infinite-scroll
