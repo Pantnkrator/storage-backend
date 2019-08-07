@@ -1,7 +1,9 @@
 package com.umsa.storage.web.rest;
 
 import com.umsa.storage.service.FileService;
+import com.umsa.storage.service.FileTypeService;
 import com.umsa.storage.service.dto.FileDTO;
+import com.umsa.storage.service.dto.FileTypeDTO;
 import com.umsa.storage.web.rest.errors.BadRequestAlertException;
 
 import org.springframework.http.MediaType;
@@ -50,16 +52,24 @@ public class FileController {
     private static final String ENTITY_NAME = "file";
     
     private final FileService fileService;
+    private final FileTypeService fileTypeService;
 
-    public FileController(FileService fileService) {
+    public FileController(FileService fileService, FileTypeService fileTypeService) {
         this.fileService = fileService;
+        this.fileTypeService = fileTypeService;
     }
     @PostMapping("/files/upload")
     public ResponseEntity<String> uploadPdf(@RequestParam("pdfFile") MultipartFile pdfFile,
-            @RequestParam("type") String type, @RequestParam("name") String name, HttpServletRequest request) throws IOException, URISyntaxException {
+            @RequestParam("typeId") Integer typeId, @RequestParam("fileTypeId") Long fileTypeId, HttpServletRequest request) throws IOException, URISyntaxException {
         String home = System.getProperty("user.home");
         String dirLocation = "/.umsa/forms/";
-        if(type.equals("STUDENT")){
+        Optional<FileTypeDTO> fileTypeOptional = fileTypeService.findOne(fileTypeId);
+        if(!fileTypeOptional.isPresent()){
+            throw new BadRequestAlertException("No se encontro el tipo de archivo", "File", "not found");
+        }
+        FileTypeDTO fileTypeDTO = fileTypeOptional.get();
+        dirLocation += fileTypeDTO.getName().replace(" ", "");
+        /* if(type.equals("STUDENT")){
             dirLocation += "students/";
         }
         if(type.equals("TEACHER")) {
@@ -67,15 +77,15 @@ public class FileController {
         }
         if(type.equals("PROFESSIONAL")) {
             dirLocation += "professional/";
-        }
+        } */
         String dir1 = dirLocation;
         String dir =  home + dirLocation;
-        String typeImage = pdfFile.getOriginalFilename().substring(
+        String typeFile = pdfFile.getOriginalFilename().substring(
                 pdfFile.getOriginalFilename().lastIndexOf(".") + 1, pdfFile.getOriginalFilename().length());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String imgName = "";
-        if (typeImage.equalsIgnoreCase("pdf")) {
+        if (typeFile.equalsIgnoreCase("pdf")) {
             imgName = sdf.format(new Date()) + timestamp.getTime() + ".pdf";
         } else {
             throw new BadRequestAlertException("El archivo tiene un formato incorrecto", "fileContorller", "invalidFormat");
@@ -88,8 +98,14 @@ public class FileController {
         pdfFile.transferTo(file);
         String server = "http://localhost:8080" + "/pdf/";
 
-        String imageUrl = server + "file" + "/get-pdf/" + imgName + "?homeEntity=" + "user.home" + "&url="
+        String pdfUrl = server + "file" + "/get-pdf/" + imgName + "?homeEntity=" + "user.home" + "&url="
                 + dir1;
-        return ResponseEntity.created(new URI("/api/file/" + "pdf-form")).body(imageUrl);
+        FileDTO fileDTO = new FileDTO();
+        fileDTO.setName(pdfFile.getOriginalFilename());
+        fileDTO.setTypeId(typeId);
+        fileDTO.setFileTypeId(fileTypeId);
+        fileDTO.setUrl(pdfUrl);
+        fileService.save(fileDTO);
+        return ResponseEntity.created(new URI("/api/file/" + "pdf-form")).body(pdfUrl);
     }
 }
