@@ -5,6 +5,7 @@ import com.umsa.storage.domain.File;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 
@@ -15,4 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FileRepository extends JpaRepository<File, Long> {
     Page<File> findAllByFileTypeId(Pageable pageable, Long fileTypeId);
+    
+    @Query("select file from File file where file.fileType.id = :fileTypeId and file.typeId = :keyword")
+    Page<File> findAllByFileTypeIdKeyword(@Param("fileTypeId") Long fileTypeId, @Param("keyword") Integer keyword, Pageable pageable);
 }

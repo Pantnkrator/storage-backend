@@ -65,6 +65,11 @@ public class FileService {
             .map(fileMapper::toDto);
     }
 
+    @Transactional(readOnly = true)
+    public Page<FileDTO> searchByFileType(Pageable pageable, Long fileTypeId, Integer keyword){
+        return fileRepository.findAllByFileTypeIdKeyword(fileTypeId, keyword, pageable)
+                .map(fileMapper::toDto);
+    }
 
 
     /**
