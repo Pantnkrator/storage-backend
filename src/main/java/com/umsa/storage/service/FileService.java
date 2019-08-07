@@ -58,6 +58,14 @@ public class FileService {
             .map(fileMapper::toDto);
     }
 
+    @Transactional(readOnly = true)
+    public Page<FileDTO> findAllByFileType(Pageable pageable, Long fileTypeId) {
+        log.debug("Request to get all Files");
+        return fileRepository.findAllByFileTypeId(pageable, fileTypeId)
+            .map(fileMapper::toDto);
+    }
+
+
 
     /**
      * Get one file by id.

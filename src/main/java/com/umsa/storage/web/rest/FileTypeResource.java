@@ -93,11 +93,11 @@ public class FileTypeResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of fileTypes in body.
      */
     @GetMapping("/file-types")
-    public ResponseEntity<List<FileTypeDTO>> getAllFileTypes(Pageable pageable) {
+    public ResponseEntity<Page<FileTypeDTO>> getAllFileTypes(Pageable pageable) {
         log.debug("REST request to get a page of FileTypes");
         Page<FileTypeDTO> page = fileTypeService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        return ResponseEntity.ok().headers(headers).body(page);
     }
 
     /**

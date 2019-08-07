@@ -93,11 +93,11 @@ public class FileResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of files in body.
      */
     @GetMapping("/files")
-    public ResponseEntity<List<FileDTO>> getAllFiles(Pageable pageable) {
+    public ResponseEntity<Page<FileDTO>> getAllFiles(Pageable pageable, Long fileTypeId) {
         log.debug("REST request to get a page of Files");
-        Page<FileDTO> page = fileService.findAll(pageable);
+        Page<FileDTO> page = fileService.findAllByFileType(pageable, fileTypeId);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        return ResponseEntity.ok().headers(headers).body(page);
     }
 
     /**
