@@ -44,9 +44,11 @@ public class FileResourceIT {
     private static final String DEFAULT_URL = "AAAAAAAAAA";
     private static final String UPDATED_URL = "BBBBBBBBBB";
 
-    private static final Integer DEFAULT_TYPE_ID = 1;
-    private static final Integer UPDATED_TYPE_ID = 2;
-    private static final Integer SMALLER_TYPE_ID = 1 - 1;
+    private static final String DEFAULT_TYPE_ID = "AAAAAAAAAA";
+    private static final String UPDATED_TYPE_ID = "BBBBBBBBBB";
+
+    private static final String DEFAULT_CI = "AAAAAAAAAA";
+    private static final String UPDATED_CI = "BBBBBBBBBB";
 
     private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
     private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
@@ -113,6 +115,7 @@ public class FileResourceIT {
             .name(DEFAULT_NAME)
             .url(DEFAULT_URL)
             .typeId(DEFAULT_TYPE_ID)
+            .ci(DEFAULT_CI)
             .createdBy(DEFAULT_CREATED_BY)
             .createdDate(DEFAULT_CREATED_DATE)
             .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
@@ -130,6 +133,7 @@ public class FileResourceIT {
             .name(UPDATED_NAME)
             .url(UPDATED_URL)
             .typeId(UPDATED_TYPE_ID)
+            .ci(UPDATED_CI)
             .createdBy(UPDATED_CREATED_BY)
             .createdDate(UPDATED_CREATED_DATE)
             .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
@@ -161,6 +165,7 @@ public class FileResourceIT {
         assertThat(testFile.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testFile.getUrl()).isEqualTo(DEFAULT_URL);
         assertThat(testFile.getTypeId()).isEqualTo(DEFAULT_TYPE_ID);
+        assertThat(testFile.getCi()).isEqualTo(DEFAULT_CI);
         assertThat(testFile.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
         assertThat(testFile.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
         assertThat(testFile.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
@@ -201,7 +206,8 @@ public class FileResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(file.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].url").value(hasItem(DEFAULT_URL.toString())))
-            .andExpect(jsonPath("$.[*].typeId").value(hasItem(DEFAULT_TYPE_ID)))
+            .andExpect(jsonPath("$.[*].typeId").value(hasItem(DEFAULT_TYPE_ID.toString())))
+            .andExpect(jsonPath("$.[*].ci").value(hasItem(DEFAULT_CI.toString())))
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY.toString())))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
             .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY.toString())))
@@ -221,7 +227,8 @@ public class FileResourceIT {
             .andExpect(jsonPath("$.id").value(file.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.url").value(DEFAULT_URL.toString()))
-            .andExpect(jsonPath("$.typeId").value(DEFAULT_TYPE_ID))
+            .andExpect(jsonPath("$.typeId").value(DEFAULT_TYPE_ID.toString()))
+            .andExpect(jsonPath("$.ci").value(DEFAULT_CI.toString()))
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY.toString()))
             .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
             .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY.toString()))
@@ -252,6 +259,7 @@ public class FileResourceIT {
             .name(UPDATED_NAME)
             .url(UPDATED_URL)
             .typeId(UPDATED_TYPE_ID)
+            .ci(UPDATED_CI)
             .createdBy(UPDATED_CREATED_BY)
             .createdDate(UPDATED_CREATED_DATE)
             .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
@@ -270,6 +278,7 @@ public class FileResourceIT {
         assertThat(testFile.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testFile.getUrl()).isEqualTo(UPDATED_URL);
         assertThat(testFile.getTypeId()).isEqualTo(UPDATED_TYPE_ID);
+        assertThat(testFile.getCi()).isEqualTo(UPDATED_CI);
         assertThat(testFile.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
         assertThat(testFile.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
         assertThat(testFile.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);

@@ -8,7 +8,15 @@ entity FileType{
 entity File {
     name String,
     url String,
-    typeId Integer,
+    typeId String,
+    ci String,
+    createdBy String,
+    createdDate Instant,
+    lastModifiedBy String,
+    lastModifiedDate Instant
+}
+
+entity FileTypeUser {
     createdBy String,
     createdDate Instant,
     lastModifiedBy String,
@@ -19,8 +27,11 @@ entity File {
  * Many to one relationship.
  */
 relationship ManyToOne {
-    File{fileType} to FileType
+    File{fileType} to FileType,
+    FileTypeUser{fileType} to FileType,
+    FileTypeUser{user} to User
 }
+
 
 dto all with mapstruct
 service all with serviceClass

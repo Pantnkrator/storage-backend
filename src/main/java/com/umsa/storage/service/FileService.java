@@ -9,9 +9,11 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.Optional;
 
 /**
@@ -41,6 +43,7 @@ public class FileService {
     public FileDTO save(FileDTO fileDTO) {
         log.debug("Request to save File : {}", fileDTO);
         File file = fileMapper.toEntity(fileDTO);
+        audit(file);
         file = fileRepository.save(file);
         return fileMapper.toDto(file);
     }
@@ -56,19 +59,6 @@ public class FileService {
         log.debug("Request to get all Files");
         return fileRepository.findAll(pageable)
             .map(fileMapper::toDto);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<FileDTO> findAllByFileType(Pageable pageable, Long fileTypeId) {
-        log.debug("Request to get all Files");
-        return fileRepository.findAllByFileTypeId(pageable, fileTypeId)
-            .map(fileMapper::toDto);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<FileDTO> searchByFileType(Pageable pageable, Long fileTypeId, Integer keyword){
-        return fileRepository.findAllByFileTypeIdKeyword(fileTypeId, keyword, pageable)
-                .map(fileMapper::toDto);
     }
 
 
@@ -93,5 +83,15 @@ public class FileService {
     public void delete(Long id) {
         log.debug("Request to delete File : {}", id);
         fileRepository.deleteById(id);
+    }
+    public void audit(File file) {
+        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (file.getCreatedBy() == null) {
+            file.setCreatedBy(currentUser);
+            file.setCreatedDate(Instant.now());
+        } else {
+            file.setLastModifiedBy(currentUser);
+            file.setLastModifiedDate(Instant.now());
+        }
     }
 }

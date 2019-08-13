@@ -1,22 +1,6 @@
 {
-    "name": "File",
+    "name": "FileTypeUser",
     "fields": [
-        {
-            "fieldName": "name",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "url",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "typeId",
-            "fieldType": "String"
-        },
-        {
-            "fieldName": "ci",
-            "fieldType": "String"
-        },
         {
             "fieldName": "createdBy",
             "fieldType": "String"
@@ -38,13 +22,20 @@
         {
             "relationshipType": "many-to-one",
             "otherEntityName": "fileType",
-            "otherEntityRelationshipName": "file",
+            "otherEntityRelationshipName": "fileTypeUser",
             "relationshipName": "fileType",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "user",
+            "otherEntityRelationshipName": "fileTypeUser",
+            "relationshipName": "user",
             "otherEntityField": "id"
         }
     ],
-    "changelogDate": "20190806232238",
-    "entityTableName": "file",
+    "changelogDate": "20190812135831",
+    "entityTableName": "file_type_user",
     "dto": "mapstruct",
     "pagination": "infinite-scroll",
     "service": "serviceClass",

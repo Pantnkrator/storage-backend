@@ -4,19 +4,11 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * A DTO for the {@link com.umsa.storage.domain.File} entity.
+ * A DTO for the {@link com.umsa.storage.domain.FileTypeUser} entity.
  */
-public class FileDTO implements Serializable {
+public class FileTypeUserDTO implements Serializable {
 
     private Long id;
-
-    private String name;
-
-    private String url;
-
-    private String typeId;
-
-    private String ci;
 
     private String createdBy;
 
@@ -29,44 +21,14 @@ public class FileDTO implements Serializable {
 
     private Long fileTypeId;
 
+    private Long userId;
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getTypeId() {
-        return typeId;
-    }
-
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
-    }
-
-    public String getCi() {
-        return ci;
-    }
-
-    public void setCi(String ci) {
-        this.ci = ci;
     }
 
     public String getCreatedBy() {
@@ -109,6 +71,14 @@ public class FileDTO implements Serializable {
         this.fileTypeId = fileTypeId;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -118,11 +88,11 @@ public class FileDTO implements Serializable {
             return false;
         }
 
-        FileDTO fileDTO = (FileDTO) o;
-        if (fileDTO.getId() == null || getId() == null) {
+        FileTypeUserDTO fileTypeUserDTO = (FileTypeUserDTO) o;
+        if (fileTypeUserDTO.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), fileDTO.getId());
+        return Objects.equals(getId(), fileTypeUserDTO.getId());
     }
 
     @Override
@@ -132,17 +102,14 @@ public class FileDTO implements Serializable {
 
     @Override
     public String toString() {
-        return "FileDTO{" +
+        return "FileTypeUserDTO{" +
             "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", url='" + getUrl() + "'" +
-            ", typeId='" + getTypeId() + "'" +
-            ", ci='" + getCi() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", fileType=" + getFileTypeId() +
+            ", user=" + getUserId() +
             "}";
     }
 }

@@ -7,11 +7,11 @@ import java.io.Serializable;
 import java.time.Instant;
 
 /**
- * A File.
+ * A FileTypeUser.
  */
 @Entity
-@Table(name = "file")
-public class File implements Serializable {
+@Table(name = "file_type_user")
+public class FileTypeUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -19,18 +19,6 @@ public class File implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
-
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "url")
-    private String url;
-
-    @Column(name = "type_id")
-    private String typeId;
-
-    @Column(name = "ci")
-    private String ci;
 
     @Column(name = "created_by")
     private String createdBy;
@@ -45,8 +33,12 @@ public class File implements Serializable {
     private Instant lastModifiedDate;
 
     @ManyToOne
-    @JsonIgnoreProperties("files")
+    @JsonIgnoreProperties("fileTypeUsers")
     private FileType fileType;
+
+    @ManyToOne
+    @JsonIgnoreProperties("fileTypeUsers")
+    private User user;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -57,63 +49,11 @@ public class File implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public File name(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public File url(String url) {
-        this.url = url;
-        return this;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getTypeId() {
-        return typeId;
-    }
-
-    public File typeId(String typeId) {
-        this.typeId = typeId;
-        return this;
-    }
-
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
-    }
-
-    public String getCi() {
-        return ci;
-    }
-
-    public File ci(String ci) {
-        this.ci = ci;
-        return this;
-    }
-
-    public void setCi(String ci) {
-        this.ci = ci;
-    }
-
     public String getCreatedBy() {
         return createdBy;
     }
 
-    public File createdBy(String createdBy) {
+    public FileTypeUser createdBy(String createdBy) {
         this.createdBy = createdBy;
         return this;
     }
@@ -126,7 +66,7 @@ public class File implements Serializable {
         return createdDate;
     }
 
-    public File createdDate(Instant createdDate) {
+    public FileTypeUser createdDate(Instant createdDate) {
         this.createdDate = createdDate;
         return this;
     }
@@ -139,7 +79,7 @@ public class File implements Serializable {
         return lastModifiedBy;
     }
 
-    public File lastModifiedBy(String lastModifiedBy) {
+    public FileTypeUser lastModifiedBy(String lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
         return this;
     }
@@ -152,7 +92,7 @@ public class File implements Serializable {
         return lastModifiedDate;
     }
 
-    public File lastModifiedDate(Instant lastModifiedDate) {
+    public FileTypeUser lastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
         return this;
     }
@@ -165,13 +105,26 @@ public class File implements Serializable {
         return fileType;
     }
 
-    public File fileType(FileType fileType) {
+    public FileTypeUser fileType(FileType fileType) {
         this.fileType = fileType;
         return this;
     }
 
     public void setFileType(FileType fileType) {
         this.fileType = fileType;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public FileTypeUser user(User user) {
+        this.user = user;
+        return this;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -180,10 +133,10 @@ public class File implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof File)) {
+        if (!(o instanceof FileTypeUser)) {
             return false;
         }
-        return id != null && id.equals(((File) o).id);
+        return id != null && id.equals(((FileTypeUser) o).id);
     }
 
     @Override
@@ -193,12 +146,8 @@ public class File implements Serializable {
 
     @Override
     public String toString() {
-        return "File{" +
+        return "FileTypeUser{" +
             "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", url='" + getUrl() + "'" +
-            ", typeId='" + getTypeId() + "'" +
-            ", ci='" + getCi() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +

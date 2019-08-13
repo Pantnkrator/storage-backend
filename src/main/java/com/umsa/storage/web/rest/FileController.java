@@ -60,7 +60,7 @@ public class FileController {
     }
     @PostMapping("/files/upload")
     public ResponseEntity<String> uploadPdf(@RequestParam("pdfFile") MultipartFile pdfFile,
-            @RequestParam("typeId") Integer typeId, @RequestParam("fileTypeId") Long fileTypeId, HttpServletRequest request) throws IOException, URISyntaxException {
+            @RequestParam("typeId") String typeId, @RequestParam("fileTypeId") Long fileTypeId, HttpServletRequest request) throws IOException, URISyntaxException {
         String home = System.getProperty("user.home");
         String dirLocation = "/.umsa/forms/";
         Optional<FileTypeDTO> fileTypeOptional = fileTypeService.findOne(fileTypeId);

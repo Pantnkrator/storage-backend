@@ -9,9 +9,11 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.Optional;
 
 /**
@@ -80,5 +82,15 @@ public class FileTypeService {
     public void delete(Long id) {
         log.debug("Request to delete FileType : {}", id);
         fileTypeRepository.deleteById(id);
+    }
+    public void audit(FileType pago) {
+        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (pago.getCreatedBy() == null) {
+            pago.setCreatedBy(currentUser);
+            pago.setCreatedDate(Instant.now());
+        } else {
+            pago.setLastModifiedBy(currentUser);
+            pago.setLastModifiedDate(Instant.now());
+        }
     }
 }
