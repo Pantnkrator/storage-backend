@@ -2,6 +2,7 @@ package com.umsa.storage.web.rest;
 
 import com.umsa.storage.service.FileService;
 import com.umsa.storage.service.FileTypeService;
+import com.umsa.storage.service.FileTypeUserService;
 import com.umsa.storage.service.dto.FileDTO;
 import com.umsa.storage.service.dto.FileTypeDTO;
 import com.umsa.storage.web.rest.errors.BadRequestAlertException;
@@ -53,10 +54,12 @@ public class FileController {
     
     private final FileService fileService;
     private final FileTypeService fileTypeService;
+    private final FileTypeUserService fileTypeUserService;
 
-    public FileController(FileService fileService, FileTypeService fileTypeService) {
+    public FileController(FileService fileService, FileTypeService fileTypeService, FileTypeUserService fileTypeUserService) {
         this.fileService = fileService;
         this.fileTypeService = fileTypeService;
+        this.fileTypeUserService = fileTypeUserService;
     }
     @PostMapping("/files/upload")
     public ResponseEntity<String> uploadPdf(@RequestParam("pdfFile") MultipartFile pdfFile,
@@ -66,6 +69,9 @@ public class FileController {
         Optional<FileTypeDTO> fileTypeOptional = fileTypeService.findOne(fileTypeId);
         if(!fileTypeOptional.isPresent()){
             throw new BadRequestAlertException("No se encontro el tipo de archivo", "File", "not found");
+        }
+        if(!fileTypeUserService.searchByFileType(fileTypeId)) {
+            throw new BadRequestAlertException("No tiene permiso para subir este tipo de archivos", "FileUser", "unauthorized");
         }
         FileTypeDTO fileTypeDTO = fileTypeOptional.get();
         dirLocation += fileTypeDTO.getName().replace(" ", "");

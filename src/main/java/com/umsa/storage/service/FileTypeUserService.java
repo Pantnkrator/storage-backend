@@ -1,5 +1,6 @@
 package com.umsa.storage.service;
 
+import com.umsa.storage.domain.Authority;
 import com.umsa.storage.domain.FileTypeUser;
 import com.umsa.storage.domain.User;
 import com.umsa.storage.repository.FileTypeRepository;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,10 +37,13 @@ public class FileTypeUserService {
 
     private final UserRepository userRepository;
 
-    public FileTypeUserService(FileTypeUserRepository fileTypeUserRepository, FileTypeUserMapper fileTypeUserMapper, UserRepository userRepository) {
+    private final UserService userService;
+
+    public FileTypeUserService(FileTypeUserRepository fileTypeUserRepository, FileTypeUserMapper fileTypeUserMapper, UserRepository userRepository, UserService userService) {
         this.fileTypeUserRepository = fileTypeUserRepository;
         this.fileTypeUserMapper = fileTypeUserMapper;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     /**
@@ -67,6 +72,14 @@ public class FileTypeUserService {
             .map(fileTypeUserMapper::toDto);
     }
 
+    @Transactional(readOnly = true)
+    public List<FileTypeUserDTO> findAllMyFileTpe() {
+        log.debug("Request to get all FileTypeUsers");
+        return fileTypeUserMapper.toDto(fileTypeUserRepository.findByUserIsCurrentUser());
+    }
+
+
+
 
     /**
      * Get one fileTypeUser by id.
@@ -93,8 +106,13 @@ public class FileTypeUserService {
 
     public Boolean searchByFileType(Long fileTypeId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Optional<User> currentUser = userRepository.findOneByLogin(auth.getName());
+        Optional<User> currentUser = userService.getUserWithAuthoritiesByLogin(auth.getName());
         User user = currentUser.get();
+        for(Authority authority: user.getAuthorities()){
+            if(authority.getName().equals("ROLE_ADMIN")) {
+                return true;
+            }
+        }
         Optional<FileTypeUser> fileTypeUser = fileTypeUserRepository.findOneByUserIdAndFileTypeId(user.getId(), fileTypeId);
         if(fileTypeUser.isPresent()) {
             return true;
