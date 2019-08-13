@@ -8,6 +8,8 @@ import com.umsa.storage.repository.FileTypeUserRepository;
 import com.umsa.storage.repository.UserRepository;
 import com.umsa.storage.service.dto.FileTypeUserDTO;
 import com.umsa.storage.service.mapper.FileTypeUserMapper;
+import com.umsa.storage.web.rest.errors.BadRequestAlertException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +19,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import io.undertow.util.BadRequestException;
 
 import java.time.Instant;
 import java.util.List;
@@ -78,6 +82,11 @@ public class FileTypeUserService {
         return fileTypeUserMapper.toDto(fileTypeUserRepository.findByUserIsCurrentUser());
     }
 
+    @Transactional(readOnly = true)
+    public List<FileTypeUserDTO> findAllFileTypeByUserId(Long userId) {
+        log.debug("Request to get all FileTypeUsers");
+        return fileTypeUserMapper.toDto(fileTypeUserRepository.findAllByUserId(userId));
+    }
 
 
 
@@ -102,6 +111,14 @@ public class FileTypeUserService {
     public void delete(Long id) {
         log.debug("Request to delete FileTypeUser : {}", id);
         fileTypeUserRepository.deleteById(id);
+    }
+
+    public void deleteByUserAndFileType(Long userId, Long fileTypeId) {
+        Optional<FileTypeUser> fileTypeUser = fileTypeUserRepository.findOneByUserIdAndFileTypeId(userId, fileTypeId);
+        if(!fileTypeUser.isPresent()) {
+            throw new BadRequestAlertException("No se encuentra el dato a eliminar", "fileType", "not found");
+        }
+        delete(fileTypeUser.get().getId());
     }
 
     public Boolean searchByFileType(Long fileTypeId) {
@@ -133,3 +150,4 @@ public class FileTypeUserService {
         }
     }
 }
+

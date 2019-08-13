@@ -18,4 +18,6 @@ public interface FileTypeUserRepository extends JpaRepository<FileTypeUser, Long
     List<FileTypeUser> findByUserIsCurrentUser();
 
     Optional<FileTypeUser> findOneByUserIdAndFileTypeId(Long userId, Long fileTypeId);
+
+    List<FileTypeUser> findAllByUserId(Long userId);
 }

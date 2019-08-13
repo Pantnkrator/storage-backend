@@ -141,18 +141,43 @@ public class FileTypeUserResource {
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 
-    @GetMapping("/file-type-user/authority")
+    @DeleteMapping("/file-type-users")
+    public ResponseEntity<Void> deleteFileTypeUserByUser(Long userId, Long fileTypeId) {
+        log.debug("REST request to delete FileTypeUser : {}");
+        fileTypeUserService.deleteByUserAndFileType(userId, fileTypeId);
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, userId.toString())).build();
+    }
+
+
+    @GetMapping("/file-type-users/authority")
     public ResponseEntity<Boolean> checkAuthority(Long fileTypeId) {
         Boolean status = fileTypeUserService.searchByFileType(fileTypeId);
         return ResponseEntity.ok().body(status);
     }
     
-    @GetMapping("/file-type-user/permissions")
+    @GetMapping("/file-type-users/permissions")
     public ResponseEntity<List<FileTypeDTO>> findMyPermissions(){
         List<FileTypeUserDTO> page = fileTypeUserService.findAllMyFileTpe();
         List<FileTypeDTO> returnData = new ArrayList<>();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Optional<User> currentUser = userService.getUserWithAuthoritiesByLogin(auth.getName());
+        User user = currentUser.get();
+        for(Authority authority: user.getAuthorities()){
+            if(authority.getName().equals("ROLE_ADMIN")) {
+                return ResponseEntity.ok().body(fileTypeService.findAll(new PageRequest(0, 1<<20)).getContent());
+            }
+        }
+        for(FileTypeUserDTO file: page) {
+            FileTypeDTO fileTypeDTO = fileTypeService.findOne(file.getFileTypeId()).get();
+            returnData.add(fileTypeDTO);
+        }
+        return ResponseEntity.ok().body(returnData);        
+    }
+    @GetMapping("/file-type-users/permissions/{userId}")
+    public ResponseEntity<List<FileTypeDTO>> findPermissionsByUserId(@PathVariable Long userId){
+        List<FileTypeUserDTO> page = fileTypeUserService.findAllFileTypeByUserId(userId);
+        List<FileTypeDTO> returnData = new ArrayList<>();
+        Optional<User> currentUser = userService.getUserWithAuthorities(userId);
         User user = currentUser.get();
         for(Authority authority: user.getAuthorities()){
             if(authority.getName().equals("ROLE_ADMIN")) {
